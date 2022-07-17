@@ -16,7 +16,6 @@ def runCommand(commandString):
     process = subprocess.Popen(commandString.split(), stdout=subprocess.PIPE)
     process.communicate()
     processReturnCode = process.returncode
-    #print("returncode: {}".format(processReturnCode))
    
     
     if processReturnCode >= 0:
