@@ -70,8 +70,6 @@ def start(*monitorSettings):
         case "primary":
             setDisplays(xrandrPrimary)
             
-
-
 if __name__ == '__main__':
     """ When script starts, get the command arguments and start the script. """
 

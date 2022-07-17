@@ -80,7 +80,7 @@ def copyConfigFiles():
     """Using the config-targets.conf, copies the targeted config files into
     the ~/.os-setup-configs-backup folder."""
     for line in parseConfigFile():
-        uri = configBackupPath + "/{}".format(line[1])
+        uri = configBackupPath + "/{}".format(line[1].strip())
         shutil.copyfile(line[0], uri)
 
 createUsersActiveConfigFile()
