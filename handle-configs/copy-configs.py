@@ -1,13 +1,9 @@
 import os
-
-
-# look at config-targets.conf and parse through the file
-# for all entries in that config file, we'll need to
-# copy the target files and create a new directory in configs
-# folder.
+import shutil
 
 configDirectoryPath = "{}/.config/os-setup".format(os.getenv("HOME"))
 configFilePath = configDirectoryPath + "/config-targets.conf"
+configBackupPath = "{}/.os-setup-configs-backup".format(os.getenv("HOME"))
 
 def parseConfigFile():
     """Parses the config-targets.conf file to copy all targeted 
@@ -26,8 +22,8 @@ def parseConfigFile():
                 createAndAddValidTuple(line, validTuples)
             return validTuples
     except FileNotFoundError:
-        print("Config file for Os-Setup is not found. Os-Setup will now create a new config file for you.")
-        createConfigFiles()
+        print("Config file for Os-Setup is not found. Os-Setup will now create a new config file for you. Update the newly created config file that Os-Setup created and rerun Os-Setup.")
+        createUsersActiveConfigFile()
         return []
 
 def createAndAddValidTuple(line, validTuples):
@@ -59,20 +55,33 @@ def parseLine(unvalidatedLine):
         return ()
     return (splittedLine[0], splittedLine[1])
 
-
-def createConfigFiles():
+def createUsersActiveConfigFile():
     """Creates the config folder for os-setup and directory in the user's home directory."""
 
-    # Create directory only if it doesn't exist.
+    configFilePathExists = os.path.exists(configFilePath)
+    configBackupPathExists = os.path.exists(configBackupPath)
+
+    if configFilePathExists and configBackupPathExists:
+        return
+
+    # Create files and folders where needed.
+
     if os.path.exists(configDirectoryPath) == False:
         os.mkdir(configDirectoryPath)
 
-    # Create file only if it doesn't exist.
-    if os.path.exists(configFilePath) == False:
+    if configFilePathExists == False:
         open(configFilePath, "x")
 
+    if configBackupPathExists == False:
+        os.mkdir(configBackupPath)
 
-createConfigFiles()
-for line in parseConfigFile():
-    print(line)
 
+def copyConfigFiles():
+    """Using the config-targets.conf, copies the targeted config files into
+    the ~/.os-setup-configs-backup folder."""
+    for line in parseConfigFile():
+        uri = configBackupPath + "/{}".format(line[1])
+        shutil.copyfile(line[0], uri)
+
+createUsersActiveConfigFile()
+copyConfigFiles()
