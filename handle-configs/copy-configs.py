@@ -81,7 +81,12 @@ def copyConfigFiles():
     the ~/.os-setup-configs-backup folder."""
     for line in parseConfigFile():
         uri = configBackupPath + "/{}".format(line[1].strip())
-        shutil.copyfile(line[0], uri)
+
+        # Create directory if there's no directory.
+        if os.path.exists(uri) == False:
+            os.mkdir(uri)
+
+        shutil.copy(line[0], uri)
 
 createUsersActiveConfigFile()
 copyConfigFiles()
