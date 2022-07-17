@@ -79,26 +79,3 @@ if __name__ == '__main__':
         start("auto")
     else:
         start(sys.argv[1])
-
-
-
-# take in user parameters for 
-    # program edp
-        # assuming edp is middle
-    # program edp right hdmi left
-    # program edp left hdmi right
-    # program default
-        # should be able to display all monitors,
-        # odering and placing shouldn't matter
-# print out all monitors
-# store monitors in memory ? maybe in file later?
-# set up formats:
-    # edp-1 primary middle
-    # hdmi-1 primary middle, edp-1 right
-    # hdmi-1 primary middle, edp-1 left
-    # default auto
-        # should be able to connect all monitors,
-        # ordering and placing shouldn't matter
-
-
-
