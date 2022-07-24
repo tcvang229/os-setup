@@ -87,6 +87,7 @@ def copyConfigFiles():
             os.mkdir(uri)
 
         shutil.copy(line[0], uri)
+        print("Copying: {}".format(line[0]))
 
 createUsersActiveConfigFile()
 copyConfigFiles()
