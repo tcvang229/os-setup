@@ -69,6 +69,18 @@ def validateBillRecord(billString):
 
     return True
 
+def printWelcome():
+    """ The welcome banner at the start of the program. """
+    print("  ____  _____            ____      _            _       _             ")
+    print(" |  _ \|  ___|          / ___|__ _| | ___ _   _| | __ _| |_ ___  _ __ ")
+    print(" | |_) | |_     _____  | |   / _` | |/ __| | | | |/ _` | __/ _ \| '__|")
+    print(" |  __/|  _|   |_____| | |__| (_| | | (__| |_| | | (_| | || (_) | |   ")
+    print(" |_|   |_|              \____\__,_|_|\___|\__,_|_|\__,_|\__\___/|_|   \n")
+
+
+#Start the program
+printWelcome()
+
 # Create directory and file if it doesn't exist.
 if os.path.exists(configDirectoryPath) is False:
     print("Configuration directory and file was not found, currently creating the directory and file now.")
@@ -114,18 +126,17 @@ currentData["bills"].extend(newBills)
 setData(currentData["bills"])
 
 print("Displaying data table...")
-print("Due Date , Bill Name , Bill Amount, Running Balance")
+print("****************************************************")
+print("*Due Date, Bill Name , Bill Amount, Running Balance*")
+print("****************************************************")
 runningBalance = 0;
 for bill in currentData["bills"]:
     if bill["billName"] == paidKeyWord:
-
         try:
             runningBalance = int(bill["billAmount"]) + runningBalance
         except:
             runningBalance = float(bill["billAmount"]) + runningBalance
-
     else:
-
         try:
             runningBalance = runningBalance - int(bill["billAmount"])
         except:
