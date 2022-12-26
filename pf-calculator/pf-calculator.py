@@ -6,6 +6,7 @@ import operator
 configDirectoryPath = "{}/.config/pf-calculator".format(os.getenv("HOME"))
 configFilePath =  configDirectoryPath + "/pf-calculator-database.json"
 paidKeyWord = "income"
+dateTimeFormat = "%Y-%m-%d"
 
 def setData(data):
     """ Writes to the json file updating the data within the file. """
@@ -49,21 +50,21 @@ def isNegative(billAmount):
 def validateBillRecord(billString):
     """ Method for bill validation before caching user input for bills. """
 
-    columns = billString.split(" ")
+    columns = billString.split(",")
     if len(columns) != 3:
-        print("Invalid amount of columns: Columns are: Due Date (mm/dd/yy), BillName (no spaces), Bill Amount.")
+        print("Invalid amount of columns. Columns are: Due Date (mm/dd/yy), BillName (no spaces), Bill Amount.")
         return False
 
     try:
-        datetime.datetime.strptime(columns[0], "%m/%d/%y")
+        datetime.datetime.strptime(removeAllWhiteSpace(columns[0]), dateTimeFormat)
     except:
-        print("Invalid date format: Date formats should be: mm/dd/yy.")
+        print("Invalid date format. Date formats should be: yyyy-mm-dd.")
         return False
 
-    if isNumber(columns[2]) == False:
-        print("Invalid bill amount: Bill amounts may only be numeric values, e.g., 1 or 150 or 351.31.")
+    if isNumber(removeAllWhiteSpace(columns[2])) == False:
+        print("Invalid bill amount. Bill amounts may only be numeric values: 1 or 150 or 351.31.")
 
-    if isNegative(columns[2]) == True:
+    if isNegative(removeAllWhiteSpace(columns[2])) == True:
         print("Invalid bill amount: Can't be a negative value.")
         return False
 
@@ -76,6 +77,10 @@ def printWelcome():
     print(" | |_) | |_     _____  | |   / _` | |/ __| | | | |/ _` | __/ _ \| '__|")
     print(" |  __/|  _|   |_____| | |__| (_| | | (__| |_| | | (_| | || (_) | |   ")
     print(" |_|   |_|              \____\__,_|_|\___|\__,_|_|\__,_|\__\___/|_|   \n")
+
+def removeAllWhiteSpace(targetString):
+    """ Removes all white spaces from a string, including spaces in between words. """
+    return "".join(targetString.split())
 
 
 #Start the program
@@ -115,8 +120,10 @@ while len(userInput) > 0:
         break
 
     if validateBillRecord(userInput):
-        columns = userInput.split(" ")
-        newBills.append({"dueDate": columns[0], "billName": columns[1], "billAmount": columns[2]})
+        columns = userInput.split(",")
+
+        formatedDate = datetime.datetime.strptime(removeAllWhiteSpace(columns[0]), dateTimeFormat).strftime(dateTimeFormat)
+        newBills.append({"dueDate": formatedDate, "billName": removeAllWhiteSpace(columns[1]), "billAmount": removeAllWhiteSpace(columns[2])})
 
     userInput = input()
 
@@ -129,7 +136,7 @@ print("Displaying data table...")
 print("****************************************************")
 print("*Due Date, Bill Name , Bill Amount, Running Balance*")
 print("****************************************************")
-runningBalance = 0;
+runningBalance = 0
 for bill in currentData["bills"]:
     if bill["billName"] == paidKeyWord:
         try:
