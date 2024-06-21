@@ -3,9 +3,13 @@ import datetime
 import json
 import operator
 
+# This config file path is only valid on Linux OS.
 configDirectoryPath = "{}/.config/pf-calculator".format(os.getenv("HOME"))
+
 configFilePath =  configDirectoryPath + "/pf-calculator-database.json"
+
 paidKeyWord = "income"
+
 dateTimeFormat = "%Y-%m-%d"
 
 def setData(data):
@@ -52,7 +56,8 @@ def validateBillRecord(billString):
 
     columns = billString.split(",")
     if len(columns) != 3:
-        print("Invalid amount of columns. Columns are: Due Date (mm/dd/yy), BillName (no spaces), Bill Amount.")
+        print("Invalid amount of columns. Columns are: Due Date (yyyy-mm-dd), BillName (no spaces), Bill Amount.")
+        print("e.g., 2024-01-25, PhoneBill, 140.88.\n")
         return False
 
     try:
@@ -72,11 +77,7 @@ def validateBillRecord(billString):
 
 def printWelcome():
     """ The welcome banner at the start of the program. """
-    print("  ____  _____            ____      _            _       _             ")
-    print(" |  _ \|  ___|          / ___|__ _| | ___ _   _| | __ _| |_ ___  _ __ ")
-    print(" | |_) | |_     _____  | |   / _` | |/ __| | | | |/ _` | __/ _ \| '__|")
-    print(" |  __/|  _|   |_____| | |__| (_| | | (__| |_| | | (_| | || (_) | |   ")
-    print(" |_|   |_|              \____\__,_|_|\___|\__,_|_|\__,_|\__\___/|_|   \n")
+    print("**** PF Calculator ****")
 
 def removeAllWhiteSpace(targetString):
     """ Removes all white spaces from a string, including spaces in between words. """
@@ -88,7 +89,7 @@ printWelcome()
 
 # Create directory and file if it doesn't exist.
 if os.path.exists(configDirectoryPath) is False:
-    print("Configuration directory and file was not found, currently creating the directory and file now.")
+    print("Configuration directory and file was not found. Creating the directory and file now.")
     try:
         os.mkdir(configDirectoryPath)
         print("Created: \n{}".format(configDirectoryPath))
@@ -111,8 +112,8 @@ elif os.path.exists(configFilePath) is False:
 
 newBills = []
 print("Enter in bills. When finished, enter in an empty record to finish input and show the data sheet.")
-print("Valid columns: [Due Date, Bill Name, Bill Amount].\n")
-print("e.g., [02/04/08, Phone Bill, 140.88].\n")
+print("Valid columns: Due Date (yyyy-mm-dd), Bill Name, Bill Amount.\n")
+print("e.g., 2024-01-25, PhoneBill, 140.88.\n")
 userInput = input()
 while len(userInput) > 0:
     if userInput == "clear":
